@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Orb
+  - Monster
   layers:
   - Default
   - TransparentFX
