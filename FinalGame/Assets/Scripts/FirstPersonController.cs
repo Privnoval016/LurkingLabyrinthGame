@@ -19,6 +19,8 @@ public class FirstPersonController : MonoBehaviour
 
     [Header("Player Statistics")]
     [SerializeField] private int orbsCollected = 0;
+    [SerializeField] private int xCoor;
+    [SerializeField] private int yCoor;
     
     [Header("Functional Options")]
     [SerializeField] private bool canSprint = true;
@@ -83,6 +85,7 @@ public class FirstPersonController : MonoBehaviour
     private Vector2 currentInput;
 
     private float rotationX = 0;
+
 
     /*
      * Called upon initialization; retrieves the necessary components and locks cursor.
@@ -266,5 +269,14 @@ public class FirstPersonController : MonoBehaviour
 
     }
 
-  
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Cell"))
+        {
+            xCoor = other.GetComponent<MazeCellObject>().xCoor;
+            yCoor = other.GetComponent<MazeCellObject>().yCoor;
+        }
+    }
+
+
 }

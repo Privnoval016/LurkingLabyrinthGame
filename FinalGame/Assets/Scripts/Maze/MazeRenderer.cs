@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 /*
@@ -13,10 +14,14 @@ public class MazeRenderer : MonoBehaviour
     [SerializeField] MazeGenerator mazeGenerator;
     [SerializeField] GameObject[] MazeCellPrefabs = new GameObject[4];
     [SerializeField] int[] weights = new int[4];  //last value always at 0
+    [SerializeField] GameObject floor;
+    private MazeCellObject[,] cells; 
     public float CellSize = 1f;
     private void Awake()
     {
         MazeCell[,] maze = mazeGenerator.GetMaze();
+        cells = new MazeCellObject[mazeGenerator.mazeWidth, mazeGenerator.mazeHeight];
+
         for (int x = 0; x < mazeGenerator.mazeWidth; x++)
         { 
             for (int y = 0; y < mazeGenerator.mazeHeight; y++) 
@@ -34,14 +39,21 @@ public class MazeRenderer : MonoBehaviour
                 
                 GameObject newCell = Instantiate(prefab, new Vector3((float)x * CellSize, 0f, (float)y * CellSize), Quaternion.identity, transform);
                 MazeCellObject mazeCell = newCell.GetComponent<MazeCellObject>();
+                cells[x, y] = mazeCell;
                 bool top = maze[x, y].topWall;
                 bool left = maze[x, y].leftWall;
                 bool right = false;
                 bool bottom = false;
                 if (x == mazeGenerator.mazeWidth - 1) right = true;
                 if (y == 0) bottom = true;
-                mazeCell.Init(top, bottom, right, left);
+                mazeCell.Init(top, bottom, right, left, x, y);
+
+                
             }
         }
+
+        floor.transform.localScale = new Vector3((mazeGenerator.mazeWidth + 2) * CellSize / 10, 1, (mazeGenerator.mazeHeight + 2) * CellSize / 10);
+        floor.transform.position = new Vector3((mazeGenerator.mazeWidth - 1) * CellSize / 2, 0, (mazeGenerator.mazeHeight - 1) * CellSize / 2);
+        floor.GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 }

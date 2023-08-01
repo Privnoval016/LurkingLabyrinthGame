@@ -14,11 +14,16 @@ public class MazeCellObject : MonoBehaviour
     [SerializeField] GameObject leftWall;
     [SerializeField] GameObject rightWall;
 
-    public void Init(bool top, bool bottom, bool right, bool left)
+    public int xCoor;
+    public int yCoor;
+
+    public void Init(bool top, bool bottom, bool right, bool left, int x, int y)
     {
         topWall.SetActive(top);
         bottomWall.SetActive(bottom);
         leftWall.SetActive(left);
         rightWall.SetActive(right);
+        xCoor = x;
+        yCoor = y;
     }
 }
