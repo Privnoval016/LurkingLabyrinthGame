@@ -6,15 +6,16 @@ TagManager:
   tags:
   - Orb
   - Monster
+  - Cell
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Orb
   - Water
   - UI
-  - 
-  - 
+  - Beacon
+  - Player
   - 
   - 
   - 

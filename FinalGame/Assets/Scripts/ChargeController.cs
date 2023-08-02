@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
-public class OrbController : MonoBehaviour
+public class ChargeController : MonoBehaviour
 {
     [SerializeField] private float bobSpeed = 0.1f;
     [SerializeField] private float bobHeight = 0.1f;
@@ -11,14 +12,14 @@ public class OrbController : MonoBehaviour
     private GameManager gameManager;
     private MazeRenderer m_Renderer;
     public Vector2Int position;
-    private Orb orbScript;
+    private Charge chargeScript;
 
     // Start is called before the first frame update
     void Start()
     {
         m_Generator = GameObject.Find("Maze").GetComponent<MazeGenerator>();
         m_Renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
-        orbScript = GameObject.Find("Maze").GetComponent<Orb>();
+        chargeScript = GameObject.Find("Maze").GetComponent<Charge>();
         gameManager = GameObject.Find("Maze").GetComponent<GameManager>();
         initialPosition = transform.position;
     }
@@ -32,11 +33,11 @@ public class OrbController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && gameManager.currentCharges < 3)
         {
-            gameManager.orbsCollected++;
-            gameManager.currentOrbs++;
-            Destroy(gameObject);
+            gameManager.currentCharges++;
+            Vector2Int pos = chargeScript.generatePosition();
+            transform.position = new Vector3((float)pos.x * m_Renderer.CellSize, 0.5f, (float)pos.y * m_Renderer.CellSize);
         }
     }
 }

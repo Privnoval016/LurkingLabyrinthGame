@@ -9,11 +9,13 @@ public class BeaconScript : MonoBehaviour
     [SerializeField] MazeRenderer m_renderer;
     [SerializeField] GameObject player;
     Orb orbScript;
+    Charge chargeScript;
     void Start()
     {
         gameManager = GameObject.Find("Maze").GetComponent<GameManager>();
         m_renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
         orbScript = GameObject.Find("Maze").GetComponent<Orb>();
+        chargeScript = GameObject.Find("Maze").GetComponent<Charge>();
         player = GameObject.Find("FirstPersonController");
     }
 
@@ -30,8 +32,10 @@ public class BeaconScript : MonoBehaviour
             m_renderer.DestroyMaze();
             m_renderer.DrawMaze();
             orbScript.resetOrbs();
+            chargeScript.resetCharges();
             gameManager.spawned = false;
-            player.GetComponent<FirstPersonController>().CanMove = false;
+            gameManager.currentCharges = 0;
+            player.GetComponent<FirstPersonController>().playerState = FirstPersonController.PlayerState.NextLevel;
             Destroy(gameObject);
         }
     }

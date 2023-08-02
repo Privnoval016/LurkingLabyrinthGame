@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 2758046864276189921}
   - component: {fileID: 438576391790515098}
   - component: {fileID: 3212249772844667844}
+  - component: {fileID: -1232737762629921585}
   m_Layer: 3
-  m_Name: Orb
+  m_Name: Charge
   m_TagString: Orb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8169fbae50712504bae0eef06812070f, type: 2}
+  - {fileID: 2100000, guid: 9f09aaa1665fcef488711cb68563f6b4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -102,7 +103,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bobSpeed: 0.5
   bobHeight: 0.1
-  pickup: {fileID: 0}
   position: {x: 0, y: 0}
 --- !u!135 &2758046864276189921
 SphereCollider:
@@ -168,6 +168,21 @@ MonoBehaviour:
   colorSelected: {r: 0.25, g: 0.65, b: 0.8, a: 1}
   nameLabel: {fileID: 0}
   header: {fileID: 0}
+--- !u!114 &-1232737762629921585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081957117030125331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac1ac8833046d443b08a24685fddcf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bobSpeed: 0.1
+  bobHeight: 0.1
+  position: {x: 0, y: 0}
 --- !u!1 &7163457422034671246
 GameObject:
   m_ObjectHideFlags: 0

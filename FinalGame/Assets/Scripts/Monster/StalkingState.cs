@@ -44,7 +44,7 @@ public class StalkingState : State
 
         if (monster.posDistFromPlayer >= monster.stalkRadius)
         {
-            Debug.Log("Moving to stalk radius");
+            /*Debug.Log("Moving to stalk radius");*/
 
             agent.speed = monster.fastSpeed;
             agent.acceleration = monster.fastSpeed * 1.5f;
@@ -54,7 +54,7 @@ public class StalkingState : State
         }
         else if (monster.posDistFromPlayer >= monster.chaseRadius && Vector3.Distance(monster.transform.position, target) < 1f)
         {
-            Debug.Log("Moving around the stalk radius");
+            /*Debug.Log("Moving around the stalk radius");*/
             agent.speed = monster.slowSpeed;
             agent.acceleration = monster.slowSpeed * 1.5f;
             target = GetRandomPosition(monster.player.transform.position, monster.stalkRadius);
@@ -65,7 +65,7 @@ public class StalkingState : State
         {
             if (!checkedForChase)
             {
-                Debug.Log("In Range of Player");
+                //Debug.Log("In Range of Player");
                 checkedForChase = true;
                 int chaseProbability = CalculateChaseProbability();
 
@@ -73,13 +73,13 @@ public class StalkingState : State
 
                 if (rng < chaseProbability)
                 {
-                    Debug.Log("Found Player");
+                    //Debug.Log("Found Player");
                     sc.ChangeState(new ChasingState());
                 }
                 else
                 {
 
-                    Debug.Log("Player not Detected");
+                    //Debug.Log("Player not Detected");
                     agent.speed = monster.slowSpeed;
                     agent.acceleration = monster.slowSpeed * 1.5f;
                     target = GetRandomPosition(monster.player.transform.position, monster.chaseRadius);

@@ -24,6 +24,8 @@ public class Monster : MonoBehaviour
     public float chaseSpeed = 10f;
     public float fastSpeed = 16f;
     public float slowSpeed = 8f;
+    public bool stunned;
+    public GameObject fullMonster;
 
     [Header("Distances")]
     public int stalkRadius;
@@ -41,7 +43,7 @@ public class Monster : MonoBehaviour
 
 
 
-    private StateController controller;
+    public StateController controller;
 
     // Start is called before the first frame update
     void Start()
@@ -77,7 +79,7 @@ public class Monster : MonoBehaviour
             xCoor = other.GetComponent<MazeCellObject>().xCoor;
             yCoor = other.GetComponent<MazeCellObject>().yCoor;
         }
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -85,7 +87,8 @@ public class Monster : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             //Add Jumpscare
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            player.playerState = FirstPersonController.PlayerState.Death;
+            fullMonster.SetActive(false);
         }
     }
 
@@ -106,5 +109,15 @@ public class Monster : MonoBehaviour
             }
         }
         return validPositions;
+    }
+    public void Stun()
+    {
+        gameObject.GetComponent<NavMeshAgent>().speed = 0f;
+        stunned = true;
+    }
+    public void UnStun()
+    {
+        stunned = false;
+        gameObject.GetComponent<NavMeshAgent>().speed = 3.5f;
     }
 }

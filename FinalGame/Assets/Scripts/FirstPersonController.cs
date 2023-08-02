@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Security.Cryptography;
 
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /**
@@ -14,7 +16,6 @@ using UnityEngine.UI;
  **/
 public class FirstPersonController : MonoBehaviour
 {
-    public bool CanMove = true;
     public bool IsSprinting => canSprint && Input.GetKey(sprintKey);
     public bool ShouldJump => Input.GetKey(jumpKey) && characterController.isGrounded;
     public bool ShouldCrouch => Input.GetKeyDown(crouchKey) && !duringCrouchingAnimation && characterController.isGrounded;
@@ -22,6 +23,7 @@ public class FirstPersonController : MonoBehaviour
     [Header("Player Statistics")]
     [SerializeField] public int xCoor;
     [SerializeField] public int yCoor;
+    [SerializeField] private GameObject monsterBody;
     
     [Header("Functional Options")]
     [SerializeField] private bool canSprint = true;
@@ -34,6 +36,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
+    [SerializeField] private KeyCode flashKey = KeyCode.F;
 
     [Header("Movement Parameters")]
     [SerializeField] private float walkSpeed = 3.0f;
@@ -76,8 +79,23 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private float sprintStepMultiplier = 0.6f;
     [SerializeField] private AudioSource footstepAudioSource = default;
     [SerializeField] private AudioClip[] footstepClips = default;
+    GameManager gameManager;
+    Monster monsterScript;
+    public GameObject flashScreen;
+    public GameObject flashObject;
+    private bool flashed;
+    private float currentAlpha = 0f;
     private float footstepTimer = 0;
     private float GetCurrentOffset => isCrouching ? baseStepSpeed * crouchStepMultiplier : IsSprinting ? baseStepSpeed * sprintStepMultiplier : baseStepSpeed;
+    [Header("Jumpscare Parameters")]
+    [SerializeField] private GameObject jumpscareImage;
+    private Animator jumpscareAnimator;
+    [SerializeField] private float xShiftRange;
+    [SerializeField] private float yShiftRange;
+    [SerializeField] private float shiftDuration;
+    [SerializeField] private float zoomDuration;
+    [SerializeField] private float zoomZPos = 0.25f;
+    private bool jumpscareBegun;
 
     private Camera playerCamera;
     private CharacterController characterController;
@@ -89,17 +107,25 @@ public class FirstPersonController : MonoBehaviour
 
     private Vector3 spawnPoint;
 
+    public enum PlayerState { CanMove, NextLevel, Death};
+    public PlayerState playerState;
+
     /*
      * Called upon initialization; retrieves the necessary components and locks cursor.
      */
     void Awake()
     {
+        gameManager = GameObject.Find("Maze").GetComponent<GameManager>();
+        monsterScript = GameObject.Find("Monster").GetComponentInChildren<Monster>();
         spawnPoint = new Vector3(0, 3, 0);
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         defaultYPos = playerCamera.transform.localPosition.y;
+        jumpscareAnimator = jumpscareImage.GetComponent<Animator>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        jumpscareImage.SetActive(false);
+        playerState = PlayerState.CanMove;
     }
 
 
@@ -108,34 +134,40 @@ public class FirstPersonController : MonoBehaviour
      */
     void Update()
     {
-        if (CanMove)
+        switch (playerState)
         {
-            HandleMovementInput();
-            HandleMouseLook();
+            case PlayerState.CanMove:
+                HandleMovementInput();
+                HandleMouseLook();
+                if (canJump)
+                {
+                    HandleJump();
+                }
+                if (canCrouch)
+                {
+                    HandleCrouch();
+                }
+                if (canUseHeadBob)
+                {
+                    HandleHeadBob();
+                }
 
-            if (canJump)
-            {
-                HandleJump();
-            }
-            if (canCrouch)
-            {
-                HandleCrouch();
-            }
-            if (canUseHeadBob)
-            {
-                HandleHeadBob();
-            }
+                if (useFootsteps)
+                {
+                    HandleFootsteps();
+                }
+                HandleFlash();
+                ApplyFinalMovements();
+                break;
 
-            if (useFootsteps)
-            {
-                HandleFootsteps();
-            }
+            case PlayerState.NextLevel:
+                Restart();
+                break;
 
-            ApplyFinalMovements();
-        }
-        else 
-        {
-            restart();
+            case PlayerState.Death:
+                if (!jumpscareBegun)
+                    BeginJumpScare();
+                break;
         }
     }
 
@@ -280,12 +312,60 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void restart()
+    private void Restart()
     {
         characterController.enabled = false;
         transform.position = spawnPoint;
         characterController.enabled = true;
-        CanMove = true;
+
+        playerState = PlayerState.CanMove;
+    }
+
+    private void HandleFlash()
+    {
+        flashScreen.GetComponent<Image>().color = new Color(1f, 1f, 1f, currentAlpha);
+        if (Input.GetKeyDown(flashKey) && !flashed && gameManager.currentCharges > 0)
+        {
+            currentAlpha = 1f;
+            Debug.Log("stun");
+            HandleStun();
+            gameManager.currentCharges--;
+            flashed = true;
+        }
+        if (flashed)
+        {
+            currentAlpha -= (0.2f/255);
+            if (currentAlpha <= 0)
+            {
+                Debug.Log("Unstun");
+                monsterScript.UnStun();
+                flashed = false;
+            }
+        }
+    }
+    private void HandleStun()
+    {
+        GameObject flash = GameObject.Instantiate(flashObject, transform.position, Quaternion.identity);
+        Rigidbody rb = flash.GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * 0.5f);
+    }
+
+    private void BeginJumpScare()
+    {
+        jumpscareBegun = true;
+        characterController.enabled = false;
+        transform.LookAt(monsterBody.transform);
+        jumpscareImage.SetActive(true);
+        jumpscareAnimator.SetBool("startJumpscare", true);
+
+        StartCoroutine(EndGame());
+
+    }
+
+    IEnumerator EndGame()
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
 }

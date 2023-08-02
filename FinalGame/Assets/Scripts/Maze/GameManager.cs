@@ -10,10 +10,13 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     System.Random gen;
     public int orbsCollected = 0;
+    public int currentCharges = 1;
     public int currentOrbs = 0;
     public bool spawned = false;
     public GameObject orbTextArea;
+    public GameObject chargeTextArea;
     TextMeshProUGUI orbText;
+    TextMeshProUGUI chargeText;
     [SerializeField] GameObject beacon;
     [SerializeField] MazeGenerator m_generator;
     [SerializeField] MazeRenderer m_renderer;
@@ -24,6 +27,7 @@ public class GameManager : MonoBehaviour
     {
         gen = new System.Random();
         orbText = orbTextArea.GetComponent<TextMeshProUGUI>();
+        chargeText = chargeTextArea.GetComponent<TextMeshProUGUI>();
         m_generator = GameObject.Find("Maze").GetComponent<MazeGenerator>();
         playerScript = GameObject.Find("FirstPersonController").GetComponent<FirstPersonController>();
         m_renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
@@ -49,5 +53,6 @@ public class GameManager : MonoBehaviour
             }
         }
         orbText.text = "" + orbsCollected;
+        chargeText.text = "" + currentCharges;
     }
 }

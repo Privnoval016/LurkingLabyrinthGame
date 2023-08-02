@@ -17,11 +17,11 @@ public class HidingState : State
     //When the state starts for the first time
     public override void OnEnter()
     {
+        Debug.Log("hiding");
         monster = sc.gameObject.GetComponent<Monster>();
         agent = monster.GetComponent<NavMeshAgent>();
         m_Renderer = monster.m_Renderer;
         m_Generator = monster.m_Generator;
-
         target = FindFarthestPositionInRange(monster.player.transform.position, monster.stalkRadius);
         agent.speed = monster.fastSpeed;
         agent.acceleration = monster.fastSpeed * 1.5f;
@@ -31,6 +31,7 @@ public class HidingState : State
     //Called during Update()
     public override void OnUpdate()
     {
+        Debug.Log("Hiding");
         if (Vector3.Distance(monster.transform.position, target) < 1f)
         {
             sc.ChangeState(new StalkingState());
