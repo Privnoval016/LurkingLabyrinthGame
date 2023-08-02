@@ -17,14 +17,22 @@ public class MazeRenderer : MonoBehaviour
     [SerializeField] GameObject floor;
     private MazeCellObject[,] cells; 
     public float CellSize = 1f;
+    MazeCell[,] maze;
     private void Awake()
     {
-        MazeCell[,] maze = mazeGenerator.GetMaze();
+        DrawMaze();
+        floor.transform.localScale = new Vector3((mazeGenerator.mazeWidth + 2) * CellSize / 10, 1, (mazeGenerator.mazeHeight + 2) * CellSize / 10);
+        floor.transform.position = new Vector3((mazeGenerator.mazeWidth - 1) * CellSize / 2, 0, (mazeGenerator.mazeHeight - 1) * CellSize / 2);
+        floor.GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+    public void DrawMaze()
+    {
+        maze = mazeGenerator.GetMaze();
         cells = new MazeCellObject[mazeGenerator.mazeWidth, mazeGenerator.mazeHeight];
 
         for (int x = 0; x < mazeGenerator.mazeWidth; x++)
-        { 
-            for (int y = 0; y < mazeGenerator.mazeHeight; y++) 
+        {
+            for (int y = 0; y < mazeGenerator.mazeHeight; y++)
             {
                 GameObject prefab = null;
                 int rand = gen.Next(1, 101);
@@ -36,7 +44,7 @@ public class MazeRenderer : MonoBehaviour
                         break;
                     }
                 }
-                
+
                 GameObject newCell = Instantiate(prefab, new Vector3((float)x * CellSize, 0f, (float)y * CellSize), Quaternion.identity, transform);
                 MazeCellObject mazeCell = newCell.GetComponent<MazeCellObject>();
                 cells[x, y] = mazeCell;
@@ -48,12 +56,22 @@ public class MazeRenderer : MonoBehaviour
                 if (y == 0) bottom = true;
                 mazeCell.Init(top, bottom, right, left, x, y);
 
-                
             }
         }
-
-        floor.transform.localScale = new Vector3((mazeGenerator.mazeWidth + 2) * CellSize / 10, 1, (mazeGenerator.mazeHeight + 2) * CellSize / 10);
-        floor.transform.position = new Vector3((mazeGenerator.mazeWidth - 1) * CellSize / 2, 0, (mazeGenerator.mazeHeight - 1) * CellSize / 2);
-        floor.GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+    public void DestroyMaze()
+    {
+        for (int i = 0; i < mazeGenerator.mazeHeight; i ++)
+        {
+            for (int j = 0; j < mazeGenerator.mazeWidth; j++)
+            {
+                Destroy(cells[i, j].gameObject);
+                maze[i, j] = null;
+            }
+        }
+    }
+    public Vector3 getCellPosition(Vector2Int cellPosition)
+    {
+        return cells[cellPosition.x, cellPosition.y].transform.position;
     }
 }

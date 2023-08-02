@@ -19,15 +19,8 @@ public class Orb : MonoBehaviour
     {
         m_generator = GameObject.Find("Maze").GetComponent<MazeGenerator>();
         m_renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
-        for (int i = 0; i < amount; i++)
-        {
-            Vector2Int pos = generatePosition();
-            GameObject temp = Instantiate(orbPrefab, new Vector3((float)pos.x * m_renderer.CellSize, 0.5f, (float)pos.y * m_renderer.CellSize), Quaternion.identity);
-            orbs.Add(temp);
-            orbScripts.Add(temp.GetComponent<OrbController>());
-            orbScripts[i].position = pos;
-            Debug.Log(pos.x + ", " + pos.y);
-        }
+        clearOrbs();
+        resetOrbs();
     }
 
     // Update is called once per frame
@@ -61,5 +54,25 @@ public class Orb : MonoBehaviour
             pos = m_generator.maze[gen.Next(0, m_generator.mazeWidth - 1), gen.Next(0, m_generator.mazeHeight - 1)].position;
         }
         return pos;
+    }
+    public void resetOrbs()
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Vector2Int pos = generatePosition();
+            GameObject temp = Instantiate(orbPrefab, new Vector3((float)pos.x * m_renderer.CellSize, 0.5f, (float)pos.y * m_renderer.CellSize), Quaternion.identity);
+            orbs.Add(temp);
+            orbScripts.Add(temp.GetComponent<OrbController>());
+            orbScripts[i].position = pos;
+        }
+    }
+    public void clearOrbs()
+    {
+        for (int i = 0; i < orbs.Count; i++)
+        {
+            Destroy(orbs[i]);
+        }
+        orbs.Clear();
+        orbScripts.Clear();
     }
 }

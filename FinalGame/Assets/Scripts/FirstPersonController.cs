@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,15 +14,14 @@ using UnityEngine.UI;
  **/
 public class FirstPersonController : MonoBehaviour
 {
-    public bool CanMove { get; private set; } = true;
+    public bool CanMove = true;
     public bool IsSprinting => canSprint && Input.GetKey(sprintKey);
     public bool ShouldJump => Input.GetKey(jumpKey) && characterController.isGrounded;
     public bool ShouldCrouch => Input.GetKeyDown(crouchKey) && !duringCrouchingAnimation && characterController.isGrounded;
 
     [Header("Player Statistics")]
-    [SerializeField] private int orbsCollected = 0;
-    [SerializeField] private int xCoor;
-    [SerializeField] private int yCoor;
+    [SerializeField] public int xCoor;
+    [SerializeField] public int yCoor;
     
     [Header("Functional Options")]
     [SerializeField] private bool canSprint = true;
@@ -56,7 +57,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private float timeToCrouch = 0.25f;
     [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
     [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
-    private bool isCrouching;
+    public bool isCrouching;
     private bool duringCrouchingAnimation;
 
     [Header("Headbob Parameters")]
@@ -86,12 +87,14 @@ public class FirstPersonController : MonoBehaviour
 
     private float rotationX = 0;
 
+    private Vector3 spawnPoint;
 
     /*
      * Called upon initialization; retrieves the necessary components and locks cursor.
      */
     void Awake()
     {
+        spawnPoint = new Vector3(0, 3, 0);
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         defaultYPos = playerCamera.transform.localPosition.y;
@@ -129,6 +132,10 @@ public class FirstPersonController : MonoBehaviour
             }
 
             ApplyFinalMovements();
+        }
+        else 
+        {
+            restart();
         }
     }
 
@@ -231,11 +238,6 @@ public class FirstPersonController : MonoBehaviour
         }
         characterController.Move(moveDirection * Time.deltaTime);
     }
-
-    public void IncreaseOrbsCollected(int num)
-    {
-        orbsCollected += num;
-    }
     /*
      * The coroutine applies the crouching animation when the conditions are met.
      */
@@ -278,5 +280,12 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+    private void restart()
+    {
+        characterController.enabled = false;
+        transform.position = spawnPoint;
+        characterController.enabled = true;
+        CanMove = true;
+    }
 
 }

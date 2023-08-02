@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+
 using UnityEngine;
 
 public class StateController : MonoBehaviour
@@ -23,7 +24,7 @@ public class StateController : MonoBehaviour
         {
             currentState.Peek().OnUpdate();
         }
-        
+
     }
 
     public void ChangeState(State newState)

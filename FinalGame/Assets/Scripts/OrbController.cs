@@ -8,6 +8,7 @@ public class OrbController : MonoBehaviour
     [SerializeField] private float bobHeight = 0.1f;
     private Vector3 initialPosition;
     private MazeGenerator m_Generator;
+    private GameManager gameManager;
     private MazeRenderer m_Renderer;
     public Vector2Int position;
     private Orb orbScript;
@@ -18,6 +19,7 @@ public class OrbController : MonoBehaviour
         m_Generator = GameObject.Find("Maze").GetComponent<MazeGenerator>();
         m_Renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
         orbScript = GameObject.Find("Maze").GetComponent<Orb>();
+        gameManager = GameObject.Find("Maze").GetComponent<GameManager>();
         initialPosition = transform.position;
     }
 
@@ -36,7 +38,8 @@ public class OrbController : MonoBehaviour
             Vector2Int validPos = orbScript.generatePosition();
             transform.position = new Vector3(m_Generator.maze[validPos.x, validPos.y].position.x * m_Renderer.CellSize, 0.5f, m_Generator.maze[validPos.x, validPos.y].position.y * m_Renderer.CellSize);
             initialPosition = transform.position;
-            other.GetComponent<FirstPersonController>().IncreaseOrbsCollected(1);
+            gameManager.orbsCollected++;
+            gameManager.currentOrbs++;
         }
     }
 }
