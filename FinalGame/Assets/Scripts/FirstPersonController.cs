@@ -88,6 +88,7 @@ public class FirstPersonController : MonoBehaviour
     [Header("Flash Parameters")]
     public GameObject flashScreen;
     public GameObject flashObject;
+    System.Random gen = new System.Random();
     private bool flashed;
     private float currentAlpha = 0f;
     private float footstepTimer = 0;
@@ -118,14 +119,17 @@ public class FirstPersonController : MonoBehaviour
     public enum PlayerState { CanMove, NextLevel, Death};
     public PlayerState playerState;
 
+    MazeRenderer m_renderer;
+
     /*
      * Called upon initialization; retrieves the necessary components and locks cursor.
      */
-    void Awake()
+    void Start()
     {
         gameManager = GameObject.Find("Maze").GetComponent<GameManager>();
+        m_renderer = GameObject.Find("Maze").GetComponent<MazeRenderer>();
         monsterScript = GameObject.Find("Monster").GetComponentInChildren<Monster>();
-        spawnPoint = new Vector3(0, 3, 0);
+        spawnPoint = m_renderer.getCellPosition(new Vector2Int(gen.Next(15), gen.Next(15)));
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         defaultYPos = playerCamera.transform.localPosition.y;
@@ -136,6 +140,8 @@ public class FirstPersonController : MonoBehaviour
         jumpscareImage.SetActive(false);
         jumpscareBackground.SetActive(false);
         playerState = PlayerState.CanMove;
+
+        gameObject.transform.position = spawnPoint;
     }
 
 
@@ -325,9 +331,9 @@ public class FirstPersonController : MonoBehaviour
     private void Restart()
     {
         characterController.enabled = false;
+        spawnPoint = m_renderer.getCellPosition(new Vector2Int(gen.Next(15), gen.Next(15)));
         transform.position = spawnPoint;
         characterController.enabled = true;
-
         playerState = PlayerState.CanMove;
     }
 

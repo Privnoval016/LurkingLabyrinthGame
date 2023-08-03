@@ -6,9 +6,9 @@ public class Charge : MonoBehaviour
 {
     // Start is called before the first frame update
     [Range(0, 50)]
-    [SerializeField] int amount = 3;
+    [SerializeField] public int amount = 10;
     [Range(0, 50)]
-    [SerializeField] int range = 10;
+    [SerializeField] int range = 5;
     System.Random gen = new System.Random();
     MazeGenerator m_generator;
     MazeRenderer m_renderer;

@@ -334,7 +334,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 156, y: -76}
+  m_AnchoredPosition: {x: 156, y: -83}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &118718578
@@ -685,7 +685,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 2
   m_Range: 70
   m_SpotAngle: 148.77554
   m_InnerSpotAngle: 53.3406
@@ -1876,7 +1876,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 35, y: -77}
+  m_AnchoredPosition: {x: 35, y: -83}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &925442451
@@ -2249,7 +2249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 35, y: -35}
+  m_AnchoredPosition: {x: 35, y: -33}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1546099295
@@ -3184,9 +3184,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be02e78dc0de1ac468be463f8ae94782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orbsCollected: 8
+  orbsCollected: 0
   currentCharges: 1
-  currentOrbs: 8
+  currentOrbs: 0
   spawned: 0
   respawned: 0
   currentAlpha: 0
@@ -3210,8 +3210,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0150911b3ab7f242999e85b2b083403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 3
-  range: 10
+  amount: 10
+  range: 5
   chargePrefab: {fileID: 2081957117030125331, guid: dc57ce3d2d6adca40aea6243be3c2490, type: 3}
 --- !u!82 &2022665626
 AudioSource:
@@ -3455,7 +3455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 156, y: -34}
+  m_AnchoredPosition: {x: 156, y: -33}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2123934140

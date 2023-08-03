@@ -33,10 +33,6 @@ public class BeaconScript : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            m_renderer.DestroyMaze();
-            
-            m_renderer.DrawMaze();
-
             orbScript.resetOrbs();
             chargeScript.resetCharges();
 
@@ -44,9 +40,8 @@ public class BeaconScript : MonoBehaviour
             gameManager.respawned = true;
             gameManager.respawnText.GetComponent<TMP_Text>().color = new Color(1f, 0, 0, 1);
             gameManager.currentAlpha = 1;
-            gameManager.currentCharges = 1;
             player.GetComponent<FirstPersonController>().playerState = FirstPersonController.PlayerState.NextLevel;
-            //monster.transform.position = new Vector3(48, monster.transform.position.y, 48);
+            monster.transform.position = new Vector3(48, monster.transform.position.y, 48);
             monster.GetComponentInChildren<Monster>().levelMultiplier += 0.1f;
             monster.GetComponentInChildren<Monster>().chaseSpeed *= monster.GetComponentInChildren<Monster>().levelMultiplier;
             monster.GetComponentInChildren<Monster>().fastSpeed *= monster.GetComponentInChildren<Monster>().levelMultiplier;

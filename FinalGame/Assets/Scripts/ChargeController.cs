@@ -12,6 +12,7 @@ public class ChargeController : MonoBehaviour
     private GameManager gameManager;
     private MazeRenderer m_Renderer;
     public Vector2Int position;
+    [Range(0, 50)] 
     private Charge chargeScript;
     [SerializeField] AudioSource pickupSource;
     [SerializeField] AudioClip pickupClip;
@@ -35,7 +36,7 @@ public class ChargeController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && gameManager.currentCharges < 3)
+        if (other.CompareTag("Player") && gameManager.currentCharges < chargeScript.amount)
         {
             pickupSource.PlayOneShot(pickupClip);
             gameManager.currentCharges++;
