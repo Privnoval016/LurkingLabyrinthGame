@@ -81,20 +81,28 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private AudioClip[] footstepClips = default;
     GameManager gameManager;
     Monster monsterScript;
+
+    private float GetCurrentOffset => isCrouching ? baseStepSpeed * crouchStepMultiplier : IsSprinting ? baseStepSpeed * sprintStepMultiplier : baseStepSpeed;
+
+
+    [Header("Flash Parameters")]
     public GameObject flashScreen;
     public GameObject flashObject;
     private bool flashed;
     private float currentAlpha = 0f;
     private float footstepTimer = 0;
-    private float GetCurrentOffset => isCrouching ? baseStepSpeed * crouchStepMultiplier : IsSprinting ? baseStepSpeed * sprintStepMultiplier : baseStepSpeed;
+
     [Header("Jumpscare Parameters")]
     [SerializeField] private GameObject jumpscareImage;
-    private Animator jumpscareAnimator;
+    [SerializeField] private GameObject jumpscareBackground;
+    //private Animator jumpscareAnimator;
     [SerializeField] private float xShiftRange;
     [SerializeField] private float yShiftRange;
     [SerializeField] private float shiftDuration;
     [SerializeField] private float zoomDuration;
     [SerializeField] private float zoomZPos = 0.25f;
+    [SerializeField] private AudioSource jumpScareSource = default;
+    [SerializeField] private AudioClip jumpscareNoise = default;
     private bool jumpscareBegun;
 
     private Camera playerCamera;
@@ -121,10 +129,12 @@ public class FirstPersonController : MonoBehaviour
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
         defaultYPos = playerCamera.transform.localPosition.y;
-        jumpscareAnimator = jumpscareImage.GetComponent<Animator>();
+        //jumpscareAnimator = jumpscareImage.GetComponent<Animator>();
+        //jumpscareAnimator.SetBool("startJumpscare", false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         jumpscareImage.SetActive(false);
+        jumpscareBackground.SetActive(false);
         playerState = PlayerState.CanMove;
     }
 
@@ -334,7 +344,7 @@ public class FirstPersonController : MonoBehaviour
         }
         if (flashed)
         {
-            currentAlpha -= (0.2f/255);
+            currentAlpha -= 0.25f * Time.deltaTime; //(0.2f/255);
             if (currentAlpha <= 0)
             {
                 Debug.Log("Unstun");
@@ -354,17 +364,47 @@ public class FirstPersonController : MonoBehaviour
     {
         jumpscareBegun = true;
         characterController.enabled = false;
-        transform.LookAt(monsterBody.transform);
+        //transform.LookAt(monsterBody.transform);
         jumpscareImage.SetActive(true);
-        jumpscareAnimator.SetBool("startJumpscare", true);
+        jumpscareBackground.SetActive(true);
+        //jumpscareAnimator.SetBool("startJumpscare", true);
 
-        StartCoroutine(EndGame());
+        //jumpscareImage.transform.localScale = new Vector3(1, 1, 1);
+
+        jumpScareSource.PlayOneShot(jumpscareNoise);
+        
+        StartCoroutine(JumpScareAnimation());
 
     }
 
-    IEnumerator EndGame()
+    public IEnumerator JumpScareAnimation()
     {
-        yield return new WaitForSeconds(2);
+        /*
+        float elapsedTime = 0;
+        Vector3 end = new Vector3(7, 7, 7);
+        Vector3 startingScale = jumpscareImage.transform.localScale;
+        while (elapsedTime < 0.1f)
+        {
+            jumpscareImage.transform.localScale = Vector3.Lerp(startingScale, end, (elapsedTime / 0.1f));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        jumpscareImage.transform.position = end;
+        */
+
+        yield return new WaitForSeconds(0.2f);
+        float elapsedTime = 0;
+        Vector3 end = new Vector3(36, 36, 36);
+        Vector3 startingScale = jumpscareImage.transform.localScale;
+        while (elapsedTime < 0.2f)
+        {
+            jumpscareImage.transform.localScale = Vector3.Lerp(startingScale, end, (elapsedTime / 0.2f));
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        jumpscareImage.transform.position = end;
+
+        yield return new WaitForSeconds(0.3f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

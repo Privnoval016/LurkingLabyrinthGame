@@ -13,6 +13,8 @@ public class ChargeController : MonoBehaviour
     private MazeRenderer m_Renderer;
     public Vector2Int position;
     private Charge chargeScript;
+    [SerializeField] AudioSource pickupSource;
+    [SerializeField] AudioClip pickupClip;
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +37,11 @@ public class ChargeController : MonoBehaviour
     {
         if (other.CompareTag("Player") && gameManager.currentCharges < 3)
         {
+            pickupSource.PlayOneShot(pickupClip);
             gameManager.currentCharges++;
             Vector2Int pos = chargeScript.generatePosition();
             transform.position = new Vector3((float)pos.x * m_Renderer.CellSize, 0.5f, (float)pos.y * m_Renderer.CellSize);
+            Destroy(gameObject);
         }
     }
 }

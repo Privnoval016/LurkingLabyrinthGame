@@ -24,6 +24,7 @@ public class Monster : MonoBehaviour
     public float chaseSpeed = 10f;
     public float fastSpeed = 16f;
     public float slowSpeed = 8f;
+    [SerializeField] public float levelMultiplier = 1;
     public bool stunned;
     public GameObject fullMonster;
 
@@ -34,16 +35,24 @@ public class Monster : MonoBehaviour
     [Header("Chase Weights")]
     public float sprintMultiplier;
     public float crouchMultiplier;
+    
 
     public float checkTime;
 
     [Range(5, 45)]
     public int minChaseTime = 15, maxChaseTime = 25;
 
-
-
+    [Header("Footstep Parameters")]
+    private float footstepTimer;
+    [SerializeField] public AudioSource footstepAudioSource = default;
+    [SerializeField] private AudioClip[] footstepClips = default;
+    [SerializeField] public AudioSource chaseAudioSource = default;
+    [SerializeField] public AudioClip chaseScreech = default;
+    [SerializeField] private float footStepOffset = 1.5f;
+    
 
     public StateController controller;
+    public NavMeshAgent agent;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +67,7 @@ public class Monster : MonoBehaviour
         chaseRadius *= (int)m_Renderer.CellSize;
 
         controller = GetComponent<StateController>();
+        //agent = GetComponent<NavMeshAgent>();
 
         controller.AddNewState(new StalkingState());
 
@@ -66,7 +76,10 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        chaseSpeed *= levelMultiplier;
+        slowSpeed *= levelMultiplier;
+        fastSpeed *= levelMultiplier;
+        HandleFootsteps();
 
         //Debug.Log("Stalk Radius: " + inStalkRadius);
         //Debug.Log("Chase Radius: " + inChaseRadius);
@@ -118,6 +131,26 @@ public class Monster : MonoBehaviour
     public void UnStun()
     {
         stunned = false;
-        gameObject.GetComponent<NavMeshAgent>().speed = 3.5f;
+        gameObject.GetComponent<NavMeshAgent>().speed = chaseSpeed;
+    }
+
+    private void HandleFootsteps()
+    {
+
+        footstepAudioSource.volume = 1 - (distanceFromPlayer / stalkRadius);
+
+        footstepTimer -= Time.deltaTime;
+
+        if (footstepTimer <= 0)
+        {
+            footstepAudioSource.pitch = Random.Range(0.9f, 1.1f);
+            
+            footstepAudioSource.PlayOneShot(footstepClips[Random.Range(0, footstepClips.Length)]);
+            
+
+            footstepTimer = footStepOffset;
+        }
+
+
     }
 }

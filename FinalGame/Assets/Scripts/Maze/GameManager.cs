@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     public int currentCharges = 1;
     public int currentOrbs = 0;
     public bool spawned = false;
+    public bool respawned = false;
+    public float currentAlpha = 0;
     public GameObject orbTextArea;
     public GameObject chargeTextArea;
     TextMeshProUGUI orbText;
@@ -21,6 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] MazeGenerator m_generator;
     [SerializeField] MazeRenderer m_renderer;
     [SerializeField] Orb orbScript;
+    [SerializeField] public GameObject respawnText;
     
     [SerializeField] FirstPersonController playerScript;
     void Start()
@@ -54,5 +58,22 @@ public class GameManager : MonoBehaviour
         }
         orbText.text = "" + orbsCollected;
         chargeText.text = "" + currentCharges;
+
+        respawnText.GetComponent<TMP_Text>().color = new Color(1f, 0, 0, currentAlpha);
+        if (!respawned)
+        {
+            currentAlpha = 0;
+
+        }
+        else if (respawned)
+        {
+            Debug.Log("amog");
+            currentAlpha -= 0.25f * Time.deltaTime;
+            if (currentAlpha <= 0)
+            {
+
+                respawned = false;
+            }
+        }
     }
 }

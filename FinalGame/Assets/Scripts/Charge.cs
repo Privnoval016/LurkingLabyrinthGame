@@ -15,6 +15,7 @@ public class Charge : MonoBehaviour
     List<GameObject> charges = new List<GameObject>();
     List<ChargeController> chargeScripts = new List<ChargeController>();
     [SerializeField] GameObject chargePrefab;
+
     void Start()
     {
         m_generator = GameObject.Find("Maze").GetComponent<MazeGenerator>();

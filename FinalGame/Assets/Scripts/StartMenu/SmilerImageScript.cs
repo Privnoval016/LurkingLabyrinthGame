@@ -3,27 +3,44 @@ using System.Collections.Generic;
 using System.Threading;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SmilerImageScript : MonoBehaviour
 {
     // Start is called before the first frame update
-    float timeElapsed;
-    bool visible = false;
+
+
+    private bool flashed;
+    private float currentAlpha = 0f;
+    private float footstepTimer = 0;
+
     void Start()
     {
-        gameObject.SetActive(visible);
-        timeElapsed = 0f;
+        gameObject.SetActive(true);
+        GetComponent<RawImage>().color = new Color(1, 1, 1, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeElapsed += Time.deltaTime;
-        if (timeElapsed > 5f)
+        GetComponent<RawImage>().color = new Color(1f, 1f, 1f, currentAlpha);
+        if (!flashed)
         {
-            gameObject.SetActive(!visible);
-            visible = !visible;
-            timeElapsed = 0f;
+            currentAlpha += (0.2f / 255);
+            if (currentAlpha >= 1)
+            {
+
+                flashed = true;
+            }
+        }
+        if (flashed)
+        {
+            currentAlpha -= (0.2f / 255);
+            if (currentAlpha <= 0)
+            {
+
+                flashed = false;
+            }
         }
     }
 }

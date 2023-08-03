@@ -21,8 +21,10 @@ public class ChasingState : State
     //When the state starts for the first time
     public override void OnEnter()
     {
+        Debug.Log("chasing");
         monster = sc.gameObject.GetComponent<Monster>();
         agent = monster.GetComponent<NavMeshAgent>();
+        monster.chaseAudioSource.PlayOneShot(monster.chaseScreech);
         m_Renderer = monster.m_Renderer;
         m_Generator = monster.m_Generator;
 
@@ -31,6 +33,7 @@ public class ChasingState : State
         agent.SetDestination(monster.player.transform.position);
 
         chaseTime = Random.Range(monster.minChaseTime, monster.maxChaseTime);
+        
     }
 
     //Called during Update()

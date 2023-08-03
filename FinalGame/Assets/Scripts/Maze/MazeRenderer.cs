@@ -15,15 +15,14 @@ public class MazeRenderer : MonoBehaviour
     [SerializeField] GameObject[] MazeCellPrefabs = new GameObject[4];
     [SerializeField] int[] weights = new int[4];  //last value always at 0
     [SerializeField] GameObject floor;
+    [SerializeField] Monster monsterBody;
     private MazeCellObject[,] cells; 
     public float CellSize = 1f;
     MazeCell[,] maze;
     private void Awake()
     {
         DrawMaze();
-        floor.transform.localScale = new Vector3((mazeGenerator.mazeWidth + 2) * CellSize / 10, 1, (mazeGenerator.mazeHeight + 2) * CellSize / 10);
-        floor.transform.position = new Vector3((mazeGenerator.mazeWidth - 1) * CellSize / 2, 0, (mazeGenerator.mazeHeight - 1) * CellSize / 2);
-        floor.GetComponent<NavMeshSurface>().BuildNavMesh();
+        
     }
     public void DrawMaze()
     {
@@ -58,6 +57,13 @@ public class MazeRenderer : MonoBehaviour
 
             }
         }
+
+        floor.transform.localScale = new Vector3((mazeGenerator.mazeWidth + 2) * CellSize / 10, 1, (mazeGenerator.mazeHeight + 2) * CellSize / 10);
+        floor.transform.position = new Vector3((mazeGenerator.mazeWidth - 1) * CellSize / 2, 0, (mazeGenerator.mazeHeight - 1) * CellSize / 2);
+        floor.GetComponent<NavMeshSurface>().BuildNavMesh();
+        monsterBody = GameObject.Find("Monster").GetComponentInChildren<Monster>();
+        monsterBody.agent.enabled = false;
+        monsterBody.agent.enabled = true;
     }
     public void DestroyMaze()
     {

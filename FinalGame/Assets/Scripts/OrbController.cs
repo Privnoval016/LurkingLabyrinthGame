@@ -12,6 +12,8 @@ public class OrbController : MonoBehaviour
     private MazeRenderer m_Renderer;
     public Vector2Int position;
     private Orb orbScript;
+    [SerializeField] AudioSource pickupSource;
+    [SerializeField] AudioClip pickupClip;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,7 @@ public class OrbController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            pickupSource.PlayOneShot(pickupClip);
             gameManager.orbsCollected++;
             gameManager.currentOrbs++;
             Destroy(gameObject);
