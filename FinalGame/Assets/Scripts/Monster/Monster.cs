@@ -63,6 +63,11 @@ public class Monster : MonoBehaviour
         gameObject.GetComponent<NavMeshAgent>().enabled = true;
         player = GameObject.Find("FirstPersonController").GetComponent<FirstPersonController>();
 
+        chaseSpeed *= levelMultiplier;
+        slowSpeed *= levelMultiplier;
+        fastSpeed *= levelMultiplier;
+
+
         stalkRadius *= (int)m_Renderer.CellSize;
         chaseRadius *= (int)m_Renderer.CellSize;
 
@@ -76,9 +81,7 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        chaseSpeed *= levelMultiplier;
-        slowSpeed *= levelMultiplier;
-        fastSpeed *= levelMultiplier;
+        
         HandleFootsteps();
 
         //Debug.Log("Stalk Radius: " + inStalkRadius);

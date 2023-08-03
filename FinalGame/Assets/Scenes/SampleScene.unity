@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.009438555, g: 0.010832115, b: 0.006062832, a: 1}
+  m_IndirectSpecularColor: {r: 0.007236024, g: 0.010840947, b: 0.0041914154, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -685,8 +685,8 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 5
-  m_Range: 100
+  m_Intensity: 1
+  m_Range: 70
   m_SpotAngle: 148.77554
   m_InnerSpotAngle: 53.3406
   m_CookieSize: 10
@@ -2591,7 +2591,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f24725c186da24b4c871e5f3fb2e8941, type: 2}
+  - {fileID: 2100000, guid: 7344aaad02ddce142ac227304e03d913, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3120,7 +3120,8 @@ MonoBehaviour:
   MazeCellPrefabs:
   - {fileID: 8122170561432880191, guid: 204d39d504043fb448180b44611a6ca5, type: 3}
   - {fileID: 8122170561432880191, guid: 91eba6182b7022640b91b6565770dd57, type: 3}
-  weights: 3200000000000000
+  - {fileID: 8122170561432880191, guid: 5ce88732f1ef91d489b684ba243338ab, type: 3}
+  weights: 3c0000001e00000000000000
   floor: {fileID: 1678656829}
   monsterBody: {fileID: 0}
   CellSize: 2
@@ -3986,6 +3987,7 @@ MonoBehaviour:
   chaseSpeed: 6
   fastSpeed: 14
   slowSpeed: 6
+  levelMultiplier: 1
   stunned: 0
   fullMonster: {fileID: 2197472589430473598}
   stalkRadius: 8

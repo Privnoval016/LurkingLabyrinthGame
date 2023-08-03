@@ -63,6 +63,7 @@ public class MazeRenderer : MonoBehaviour
         floor.GetComponent<NavMeshSurface>().BuildNavMesh();
         monsterBody = GameObject.Find("Monster").GetComponentInChildren<Monster>();
         monsterBody.agent.enabled = false;
+        GameObject.Find("Monster").transform.position = new Vector3(48, 0.5f, 48);
         monsterBody.agent.enabled = true;
     }
     public void DestroyMaze()
